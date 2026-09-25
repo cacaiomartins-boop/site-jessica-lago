@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowRight, BadgeCheck, CalendarDays, Clock3, ExternalLink, MapPin, Menu, MessageCircle, Monitor, ShieldCheck, X } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, Clock3, ExternalLink, MapPin, Menu, Monitor, ShieldCheck, X } from "lucide-react";
 import { site } from "../config/site";
 
 const links = [
@@ -76,7 +76,7 @@ function Home() {
         <div className="container hero-inner">
           <div className="hero-copy">
             <span className="hero-kicker">Psicóloga e psicanalista em Brasília · Online</span>
-            <h1>Escuta para compreender o que <em>merece atenção.</em></h1>
+            <h1>Escuta clínica e <em>psicologia jurídica.</em></h1>
             <p className="hero-description">Psicoterapia e psicologia jurídica com escuta cuidadosa, clareza e respeito à singularidade de cada história.</p>
             <div className="hero-action"><Booking light /></div>
           </div>
