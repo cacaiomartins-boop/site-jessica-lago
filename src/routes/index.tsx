@@ -107,7 +107,7 @@ function Home() {
           <p>Sou psicóloga e psicanalista. Atendo em consultório particular em Brasília e também online.</p>
           <p>Minha formação em psicanálise é contínua: supervisão, grupos de estudo e escuta clínica fazem parte do meu trabalho.</p>
           <p>Atendo adolescentes e adultos. Também ofereço serviços em psicologia jurídica, como perícia, assistência técnica e elaboração de laudos.</p>
-          <div className="quote-line">“Cada pessoa tem seu tempo. O trabalho é escutar o que pode ser dito, sem apressar respostas.”</div>
+          <div className="quote-line">“É importante dar essa autonomia para quem está recebendo o atendimento, para que se entenda os próprios limites e sentimentos.”</div>
           <ul className="education">{site.education.map(item => <li key={item}>{item}</li>)}</ul>
           <div className="tags">{site.specialties.map(tag => <span className="tag" key={tag}>{tag}</span>)}</div><Booking label="Agendar uma conversa" />
         </div>
