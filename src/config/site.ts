@@ -1,5 +1,3 @@
-import portraitAsset from "../assets/jessica-lago-retrato.png.asset.json";
-import officeAsset from "../assets/consultorio-jessica-lago.png.asset.json";
 
 export const site = {
   name: "Jéssica Lago",
@@ -17,8 +15,8 @@ export const site = {
   price: "R$ 180",
   rating: "5,0",
   reviewCount: 7,
-  portrait: portraitAsset.url,
-  office: officeAsset.url,
+  portrait: "/assets/jessica-lago-retrato.png",
+  office: "/assets/consultorio-jessica-lago.png",
   education: [
     "Bacharel em Psicologia pelo Centro Universitário de Brasília (UniCEUB)",
     "Pós-graduada em Teoria Psicanalítica pelo UniCEUB",
