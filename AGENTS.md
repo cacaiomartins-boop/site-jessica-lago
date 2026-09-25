@@ -8,3 +8,6 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep profile facts and uploaded image references in `src/config/site.ts` so another professional can replace them without editing presentation markup.
+- Keep editorial palette, typography, animation, and layout rules in `src/styles.css` so the page remains consistent and token-driven.
