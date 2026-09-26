@@ -5,4 +5,5 @@
 - [x] Avaliações em layout compacto, sem espaços vazios
 - [x] Mapa interativo do Google na seção de contato
 - [x] Mapa reduzido a uma janela ao lado do título (frase removida)
-- [ ] Favicon "j" — aplicar e confirmar no navegador
+- [x] Favicon "j" — aplicado e confirmado
+- [x] Fotos do site em arquivo próprio do projeto, leves (127 KB + 47 KB), sem links externos
