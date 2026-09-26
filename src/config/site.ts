@@ -15,8 +15,8 @@ export const site = {
   price: "R$ 180",
   rating: "5,0",
   reviewCount: 7,
-  portrait: "/assets/jessica-lago-retrato.png",
-  office: "/assets/consultorio-jessica-lago.png",
+  portrait: "/assets/jessica-lago-retrato.jpg",
+  office: "/assets/consultorio-jessica-lago.jpg",
   education: [
     "Bacharel em Psicologia pelo Centro Universitário de Brasília (UniCEUB)",
     "Pós-graduada em Teoria Psicanalítica pelo UniCEUB",
