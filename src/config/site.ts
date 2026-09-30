@@ -1,6 +1,6 @@
 
 export const site = {
-  name: "Jéssica Lago",
+  name: "Jéssica Priscila Lago",
   firstName: "Jéssica",
   profession: "Psicóloga · Psicanalista",
   registration: "CRP DF 20947",
@@ -17,6 +17,15 @@ export const site = {
   reviewCount: 7,
   portrait: "/assets/jessica-lago-retrato.jpg",
   office: "/assets/consultorio-jessica-lago.jpg",
+  // Consultório compartilhado com outras profissionais. Troque o "url" pelo site real da Serenitah quando estiver pronto.
+  clinic: {
+    name: "Serenitah",
+    fullName: "Serenitah Terapias Integradas",
+    url: "https://serenitah.example",
+    label: "Conhecer o site da Serenitah",
+    address: "Asa Norte, Brasília - DF, 70701-040, Brasil",
+    mapUrl: "https://www.google.com/maps/search/?api=1&query=Asa%20Norte%2C%20Bras%C3%ADlia%20-%20DF%2C%2070701-040%2C%20Brasil",
+  },
   education: [
     "Bacharel em Psicologia pelo Centro Universitário de Brasília (UniCEUB)",
     "Pós-graduada em Teoria Psicanalítica pelo UniCEUB",
@@ -34,7 +43,7 @@ export const site = {
   ],
   services: [
     { name: "Psicoterapia presencial", description: "Atendimento psicológico individual no consultório em Brasília.", mode: "Presencial · Brasília", duration: "Em média, 50 min", price: "R$ 180" },
-    { name: "Psicoterapia online", description: "Atendimento por Google Meet, em link privativo fixo.", mode: "Online", duration: "Em média, 50 min", price: "R$ 180" },
+    { name: "Psicoterapia online", description: "Atendimento por Google Meet, em link privativo fixo. Também para brasileiros que moram fora do país.", mode: "Online · Brasil e exterior", duration: "Em média, 50 min", price: "R$ 180" },
     { name: "Psicologia jurídica", description: "Perícia ou assistência técnica, laudo pericial e formulação de quesitos para prova pericial psicológica.", mode: "Consulte a modalidade", duration: "Conforme a demanda", price: "Consultar valores" },
   ],
   reviews: [
