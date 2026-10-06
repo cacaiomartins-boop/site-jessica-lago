@@ -313,7 +313,7 @@ html.reveal-ready .reveal:not(.is-visible) { opacity: 0; transform: translateY(3
   .faq-item summary { font-size: 17px; min-height: 58px; padding: 12px 0; }
   .faq-item p { padding-right: 0; }
   .contact { padding-bottom: 44px; }
-  .contact-map-wrap iframe { display: none; }
+  .contact-map { height: 220px; }
   .contact-grid { gap: 28px; }
   .contact-grid > div + div { padding-top: 28px; }
   .footer { padding: 32px 0 20px; }
@@ -331,3 +331,44 @@ html.reveal-ready .reveal:not(.is-visible) { opacity: 0; transform: translateY(3
 .serenitah-side .serenitah-card { align-self: stretch; }
 .serenitah-map { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--forest); border-bottom: 1px solid currentColor; padding-bottom: 3px; }
 .serenitah-map:hover { color: var(--rust); }
+
+.contact-social { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+.contact-social a { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--paper); border-bottom: 1px solid var(--sage); padding-bottom: 3px; }
+.contact-social a:hover { color: var(--sage); }
+
+/* Serenitah com foto da equipe */
+.serenitah-inner { grid-template-columns: 1.15fr .85fr; grid-template-areas: "photo text" "photo side"; gap: 28px 72px; align-items: start; }
+.serenitah-text { grid-area: text; align-self: end; }
+.serenitah-side { grid-area: side; align-self: start; }
+.serenitah-photo { grid-area: photo; align-self: center; position: relative; margin: 0; padding: 0 22px 22px 0; }
+.serenitah-photo::before { content: ""; position: absolute; inset: 22px 0 0 22px; background: var(--sage); border-radius: 22px; }
+.serenitah-photo img { position: relative; display: block; width: 100%; aspect-ratio: 3/2; object-fit: cover; border-radius: 22px; }
+.serenitah-photo figcaption { position: absolute; left: 18px; bottom: 40px; display: flex; flex-direction: column; line-height: 1.35; padding: 12px 20px; border-radius: 14px; background: var(--paper); box-shadow: 0 8px 22px color-mix(in oklch, var(--forest) 14%, transparent); }
+.serenitah-photo figcaption strong { font: 400 19px var(--font-display); }
+.serenitah-photo figcaption span { font-size: 11px; color: var(--moss); }
+@media (max-width: 800px) { .serenitah-inner { grid-template-columns: 1fr; grid-template-areas: "text" "photo" "side"; gap: 28px; } .serenitah-photo { padding: 0 12px 12px 0; } .serenitah-photo::before { inset: 12px 0 0 12px; border-radius: 18px; } .serenitah-photo img { aspect-ratio: 4/3; border-radius: 18px; } .serenitah-photo figcaption { left: 12px; bottom: 26px; padding: 9px 14px; } .serenitah-photo figcaption strong { font-size: 16px; } }
+/* Rodapé mais baixo no celular */
+@media (max-width: 600px) {
+  .footer { padding: 24px 0 16px; }
+  .footer-top { gap: 20px; }
+  .footer-urgent h4 { font-size: 11px; margin-bottom: 10px; }
+  .footer-urgent-grid { grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .footer .footer-urgent-item { padding-left: 8px; }
+  .footer-urgent-item strong { font-size: 24px; }
+  .footer-urgent-item span { font-size: 11px; margin: 2px 0 0; }
+  .footer .footer-urgent-item p { display: none; }
+  .footer-brand h3 { font-size: 20px; margin-bottom: 2px; }
+  .footer-brand p { font-size: 11.5px; line-height: 1.5; margin-bottom: 0; }
+  .footer-brand p:nth-of-type(2) { display: none; }
+  .footer .footer-links { margin-top: 8px; gap: 4px 14px; }
+  .footer .footer-links a { font-size: 11.5px; }
+  .footer-bottom { margin-top: 16px; padding-top: 12px; }
+  .footer-bottom p { font-size: 10.5px; line-height: 1.5; }
+}
+@media (max-width: 600px) { .footer .footer-links a:first-child { display: none; } .footer .footer-links { gap: 4px 12px; } }
+
+/* Botões de redes sociais (contato) */
+.contact-social { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.contact-social a { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 44px; padding: 10px 20px; border: 1px solid color-mix(in oklch, var(--paper) 30%, transparent); border-radius: 20px; background: color-mix(in oklch, var(--paper) 7%, transparent); color: var(--paper); font-size: 13px; font-weight: 500; line-height: 1.2; transition: background .25s ease, border-color .25s ease, color .25s ease, transform .25s ease; }
+.contact-social a:hover { background: var(--sage); border-color: var(--sage); color: var(--forest); transform: translateY(-2px); }
+@media (max-width: 600px) { .contact-social a { flex: 1 1 0; padding-inline: 12px; } }

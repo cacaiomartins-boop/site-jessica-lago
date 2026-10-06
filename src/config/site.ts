@@ -23,9 +23,13 @@ export const site = {
     fullName: "Serenitah Terapias Integradas",
     url: "https://serenitah.example",
     label: "Conhecer o site da Serenitah",
+    photo: "/assets/serenitah-equipe.jpg",
     address: "Asa Norte, Brasília - DF, 70701-040, Brasil",
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Asa%20Norte%2C%20Bras%C3%ADlia%20-%20DF%2C%2070701-040%2C%20Brasil",
   },
+  instagramUrl: "https://www.instagram.com/psi.jessicalago",
+  instagramHandle: "@psi.jessicalago",
+  linkedinUrl: "https://www.linkedin.com/in/j%C3%A9ssica-priscila-lago-29211778",
   education: [
     "Bacharel em Psicologia pelo Centro Universitário de Brasília (UniCEUB)",
     "Pós-graduada em Teoria Psicanalítica pelo UniCEUB",
