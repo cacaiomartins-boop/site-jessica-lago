@@ -11,7 +11,21 @@ export type Publication = {
   linkLabel?: string;
 };
 
+// Foto em WebP com várias larguras. "src" é o tamanho padrão; "srcSet" deixa o navegador escolher o menor arquivo que serve.
+function photo(name: string, widths: readonly [number, number, number], width: number, height: number) {
+  return {
+    src: `/img/${name}-${widths[1]}.webp`,
+    srcSet: widths.map((w) => `/img/${name}-${w}.webp ${w}w`).join(", "),
+    width,
+    height,
+  };
+}
+
 export const site = {
+  // Endereço oficial do site (sem barra no final). Usado em canonical, sitemap, compartilhamento e dados estruturados.
+  url: "https://jessicalagopsi.com",
+  // Imagem de pré-visualização ao compartilhar o link (WhatsApp, redes sociais, Google).
+  ogImage: "/img/og-image.jpg",
   name: "Jéssica Priscila Lago",
   firstName: "Jéssica",
   profession: "Psicóloga · Psicanalista",
@@ -27,15 +41,15 @@ export const site = {
   price: "R$ 180",
   rating: "5,0",
   reviewCount: 7,
-  portrait: "/assets/jessica-lago-retrato.jpg",
-  office: "/assets/consultorio-jessica-lago.jpg",
+  portrait: photo("jessica-lago-retrato", [640, 960, 1280], 1280, 1919),
+  office: photo("consultorio-jessica-lago", [640, 960, 1280], 1280, 853),
   // Consultório compartilhado com outras profissionais. Troque o "url" pelo site real da Serenitah quando estiver pronto.
   clinic: {
     name: "Serenitah",
     fullName: "Serenitah Terapias Integradas",
     url: "https://serenitah.example",
     label: "Conhecer o site da Serenitah",
-    photo: "/assets/serenitah-equipe.jpg",
+    photo: photo("serenitah-equipe", [640, 960, 1440], 1440, 960),
     address: "Asa Norte, Brasília - DF, 70701-040, Brasil",
     mapUrl: "https://www.google.com/maps/search/?api=1&query=Asa%20Norte%2C%20Bras%C3%ADlia%20-%20DF%2C%2070701-040%2C%20Brasil",
   },
@@ -62,6 +76,18 @@ export const site = {
     { name: "Psicoterapia presencial", description: "Atendimento psicológico individual no consultório em Brasília.", mode: "Presencial · Brasília", duration: "Em média, 50 min", price: "R$ 180" },
     { name: "Psicoterapia online", description: "Atendimento por Google Meet, em link privativo fixo. Também para brasileiros que moram fora do país.", mode: "Online · Brasil e exterior", duration: "Em média, 50 min", price: "R$ 180" },
     { name: "Psicologia jurídica", description: "Perícia ou assistência técnica, laudo pericial e formulação de quesitos para prova pericial psicológica.", mode: "Consulte a modalidade", duration: "Conforme a demanda", price: "Consultar valores" },
+  ],
+  faq: [
+    { question: "Como é a primeira consulta?", answer: "É um momento para conversar sobre o que motivou sua procura e combinar como será o acompanhamento." },
+    { question: "Você atende online?", answer: "Sim. O atendimento online acontece pelo Google Meet, por meio de um link privativo fixo." },
+    { question: "Você atende brasileiros que moram fora do país?", answer: "Sim. Atendo brasileiros que vivem no exterior em sessões online, pelo Google Meet. O horário é combinado levando em conta a diferença de fuso." },
+    { question: "Quanto tempo dura cada sessão?", answer: "Cada sessão dura, em média, 50 minutos. Esse tempo pode variar conforme a pessoa ou a sessão." },
+    { question: "Qual é a frequência das sessões?", answer: "A recomendação é de uma a duas vezes por semana. Dependendo do caso, sessões quinzenais podem ser combinadas após o início." },
+    { question: "O atendimento é sigiloso?", answer: "O atendimento psicológico segue os deveres éticos de sigilo profissional. Em serviços de psicologia jurídica, as condições são esclarecidas conforme a demanda." },
+    { question: "Você atende por convênio?", answer: "O atendimento é particular, com emissão de nota fiscal. A nota pode ser usada para solicitar reembolso se o convênio oferecer essa possibilidade." },
+    { question: "Quanto tempo dura o processo?", answer: "Não há um prazo único para o acompanhamento. A decisão de continuar ou encerrar é conversada ao longo do processo." },
+    { question: "Como funciona a psicologia jurídica?", answer: "O perfil oferece perícia ou assistência técnica, laudo pericial e formulação de quesitos para prova pericial psicológica. Consulte disponibilidade e valores para a sua demanda." },
+    { question: "Como posso começar?", answer: "Você pode verificar os horários e agendar uma consulta pelo meu perfil no Doctoralia." },
   ],
   reviews: [
     { quote: "Jéssica me acompanha a quase um ano e tem sido essencial em meu acompanhamento. Recomendo", author: "Mariana F." },

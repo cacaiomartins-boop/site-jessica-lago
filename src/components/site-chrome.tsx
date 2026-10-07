@@ -38,20 +38,29 @@ export function SiteHeader({ solid = false }: { solid?: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const home = !solid;
   const close = () => setMenuOpen(false);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
   const brandContent = <><span className="brand-name">{site.name}</span><span className="brand-detail">{site.profession} · {site.registration}</span></>;
 
   return (
+    <>
+    <a className="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <header className={`site-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}>
       <div className="container header-inner">
         {home
-          ? <a className="brand" href="#topo" onClick={close} aria-label={`${site.name}, voltar ao início`}>{brandContent}</a>
-          : <Link className="brand" to="/" onClick={close} aria-label={`${site.name}, voltar ao início`}>{brandContent}</Link>}
+          ? <a className="brand" href="#topo" onClick={close}>{brandContent}</a>
+          : <Link className="brand" to="/" onClick={close}>{brandContent}</Link>}
         <nav className="desktop-nav" aria-label="Navegação principal">{navLinks.map(item => <NavItem key={item.label} item={item} home={home} />)}</nav>
         <a href={site.profileUrl} {...external} className="btn header-cta">Agendar consulta <ArrowRight size={15} strokeWidth={1.5}/></a>
-        <button className="menu-toggle" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={24} strokeWidth={1.5}/> : <Menu size={24} strokeWidth={1.5}/>}</button>
+        <button className="menu-toggle" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen} aria-controls="menu-mobile" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={24} strokeWidth={1.5}/> : <Menu size={24} strokeWidth={1.5}/>}</button>
       </div>
-      <nav className="mobile-nav" aria-label="Navegação para celular">{navLinks.map(item => <NavItem key={item.label} item={item} home={home} onClick={close} />)}<a className="btn btn-dark" href={site.profileUrl} {...external} onClick={close}>Agendar consulta <ArrowRight size={16}/></a></nav>
+      <nav className="mobile-nav" id="menu-mobile" aria-label="Navegação para celular">{navLinks.map(item => <NavItem key={item.label} item={item} home={home} onClick={close} />)}<a className="btn btn-dark" href={site.profileUrl} {...external} onClick={close}>Agendar consulta <ArrowRight size={16}/></a></nav>
     </header>
+    </>
   );
 }
 
@@ -59,8 +68,8 @@ export function SiteFooter() {
   return (
     <footer className="footer"><div className="container">
       <div className="footer-top">
-        <div className="footer-brand"><h3>{site.name}</h3><p>{site.profession} · {site.registration}</p><p>SHN, Quadra 1, Bloco D, Sala 1107 · Ed. Fusion Work e Live<br/>Brasília — DF · Online para o Brasil e exterior</p><div className="footer-links"><a href={site.mapUrl} {...external}>Mapa ↗</a><a href={site.clinic.url} {...external}>{site.clinic.name} ↗</a><Link to="/publicacoes">Publicações</Link><a href={site.profileUrl} {...external}>Doctoralia ↗</a><a href={site.instagramUrl} {...external}>Instagram ↗</a><a href={site.linkedinUrl} {...external}>LinkedIn ↗</a></div></div>
-        <div className="footer-urgent"><h4>É urgente? Ligue para:</h4><div className="footer-urgent-grid">{[
+        <div className="footer-brand"><h2>{site.name}</h2><p>{site.profession} · {site.registration}</p><p>SHN, Quadra 1, Bloco D, Sala 1107 · Ed. Fusion Work e Live<br/>Brasília — DF · Online para o Brasil e exterior</p><div className="footer-links"><a href={site.mapUrl} {...external}>Mapa ↗</a><a href={site.clinic.url} {...external}>{site.clinic.name} ↗</a><Link to="/publicacoes">Publicações</Link><a href={site.profileUrl} {...external}>Doctoralia ↗</a><a href={site.instagramUrl} {...external}>Instagram ↗</a><a href={site.linkedinUrl} {...external}>LinkedIn ↗</a></div></div>
+        <div className="footer-urgent"><h3>É urgente? Ligue para:</h3><div className="footer-urgent-grid">{[
           ["193", "Bombeiros", "Resgate, acidentes, incêndios e risco de suicídio."],
           ["190", "Polícia", "Violência, agressão ou ameaça."],
           ["192", "SAMU", "Urgências e emergências de saúde."],
@@ -74,5 +83,5 @@ export function SiteFooter() {
 
 export function FloatingContact({ always = false }: { always?: boolean }) {
   const scrolled = useScrolled(always);
-  return <a href={site.profileUrl} {...external} className={`floating-contact ${scrolled ? "visible" : ""}`} aria-label="Agendar consulta no Doctoralia" title="Agendar consulta no Doctoralia"><CalendarDays size={24} strokeWidth={1.5}/></a>;
+  return <aside aria-label="Atalho para agendar consulta"><a href={site.profileUrl} {...external} className={`floating-contact ${scrolled ? "visible" : ""}`} aria-label="Agendar consulta no Doctoralia" title="Agendar consulta no Doctoralia" tabIndex={always || scrolled ? undefined : -1}><CalendarDays size={24} strokeWidth={1.5}/></a></aside>;
 }

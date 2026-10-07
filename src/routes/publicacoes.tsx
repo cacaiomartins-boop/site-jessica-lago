@@ -2,18 +2,23 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ExternalLink } from "lucide-react";
 import { site, type Publication } from "../config/site";
 import { FloatingContact, SiteFooter, SiteHeader } from "../components/site-chrome";
+import { jsonLd, publicationsStructuredData, seo } from "../lib/seo";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
+// Enquanto não houver textos publicados, a página fica fora do Google (noindex); ao adicionar o primeiro, ela é indexada sozinha.
+const pageSeo = seo({
+  title: "Publicações e textos | Jéssica Priscila Lago",
+  description: "Textos e reflexões de Jéssica Priscila Lago, psicóloga e psicanalista CRP DF 20947, sobre psicanálise, saúde mental e cuidado.",
+  path: "/publicacoes",
+  noindex: site.publications.length === 0,
+});
+
 export const Route = createFileRoute("/publicacoes")({
   head: () => ({
-    meta: [
-      { title: "Publicações | Jéssica Priscila Lago, psicóloga e psicanalista" },
-      { name: "description", content: "Textos e reflexões de Jéssica Priscila Lago, psicóloga e psicanalista CRP DF 20947, sobre psicanálise, saúde mental e cuidado." },
-      { property: "og:title", content: "Publicações | Jéssica Priscila Lago" },
-      { property: "og:description", content: "Textos e reflexões de Jéssica Priscila Lago, psicóloga e psicanalista em Brasília." },
-      { property: "og:type", content: "website" },
-    ],
+    meta: pageSeo.meta,
+    links: pageSeo.links,
+    scripts: [jsonLd(publicationsStructuredData())],
   }),
   component: Publicacoes,
 });
@@ -35,7 +40,7 @@ function PublicationCard({ pub }: { pub: Publication }) {
 function Publicacoes() {
   return <>
     <SiteHeader solid />
-    <main>
+    <main id="conteudo" tabIndex={-1}>
       <section className="pub-hero"><div className="container">
         <span className="section-label">Publicações</span>
         <h1 className="section-title">Textos e <em>reflexões.</em></h1>

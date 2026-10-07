@@ -3,23 +3,21 @@ import { useEffect } from "react";
 import { ArrowRight, BadgeCheck, Clock3, ExternalLink, MapPin, Monitor, ShieldCheck } from "lucide-react";
 import { site } from "../config/site";
 import { FloatingContact, SiteFooter, SiteHeader } from "../components/site-chrome";
+import { homeStructuredData, jsonLd, seo } from "../lib/seo";
 
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
+const pageSeo = seo({
+  title: "Psicóloga em Brasília e Online | Jéssica Priscila Lago",
+  description: "Jéssica Priscila Lago, psicóloga e psicanalista CRP DF 20947 em Brasília e online. Psicologia jurídica, psicanálise, ansiedade e relacionamentos.",
+  path: "/",
+});
+
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title: "Psicóloga em Brasília e Online | Jéssica Priscila Lago" },
-      { name: "description", content: "Jéssica Priscila Lago, psicóloga e psicanalista CRP DF 20947 em Brasília e online. Psicologia jurídica, psicanálise, ansiedade e relacionamentos." },
-      { property: "og:title", content: "Psicóloga em Brasília e Online | Jéssica Priscila Lago" },
-      { property: "og:description", content: "Psicoterapia e psicologia jurídica com Jéssica Priscila Lago, CRP DF 20947. Atendimento presencial em Brasília e online, inclusive para brasileiros no exterior." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-    scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@context": "https://schema.org", "@graph": [
-      { "@type": "Person", name: site.name, jobTitle: "Psicóloga e Psicanalista", identifier: site.registration, url: site.profileUrl },
-      { "@type": "MedicalBusiness", name: site.name, description: "Psicologia, psicanálise e serviços em psicologia jurídica", url: site.profileUrl, address: { "@type": "PostalAddress", streetAddress: "SHN, Quadra 1, Bloco D, Sala 1107, Conjunto A, 11º andar, Edifício Fusion Work e Live", addressLocality: "Brasília", addressRegion: "DF", postalCode: "70701-040", addressCountry: "BR" } }
-    ] }) }],
+    meta: pageSeo.meta,
+    links: pageSeo.links,
+    scripts: [jsonLd(homeStructuredData())],
   }),
   component: Home,
 });
@@ -32,25 +30,50 @@ function Booking({ light = false, label = site.bookingLabel, className = "" }: {
 }
 
 function Home() {
+  // No celular, "motivos" e "depoimentos" viram carrosséis; eles precisam ser alcançáveis pelo teclado.
+  useEffect(() => {
+    const scrollers = Array.from(document.querySelectorAll<HTMLElement>("[data-scroller]"));
+    const sync = () => scrollers.forEach(el => {
+      if (el.scrollWidth > el.clientWidth + 1) {
+        el.tabIndex = 0;
+        el.setAttribute("role", "region");
+        el.setAttribute("aria-label", el.dataset["scroller"] ?? "");
+      } else {
+        el.removeAttribute("tabindex");
+        el.removeAttribute("role");
+        el.removeAttribute("aria-label");
+      }
+    });
+    sync();
+    window.addEventListener("resize", sync);
+    return () => window.removeEventListener("resize", sync);
+  }, []);
+
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timers: number[] = [];
+    // Depois que o elemento termina de aparecer, o atraso escalonado sai, para o efeito de hover responder na hora.
+    const show = (el: HTMLElement) => {
+      el.classList.add("is-visible");
+      timers.push(window.setTimeout(() => { el.style.transitionDelay = ""; }, 1500));
+    };
     const visibleNow = (el: HTMLElement) => el.getBoundingClientRect().top < window.innerHeight;
-    nodes.forEach(el => { if (visibleNow(el)) el.classList.add("is-visible"); });
+    nodes.forEach(el => { if (visibleNow(el)) show(el); });
     document.documentElement.classList.add("reveal-ready");
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add("is-visible"); observer.unobserve(entry.target); } });
+      entries.forEach(entry => { if (entry.isIntersecting) { show(entry.target as HTMLElement); observer.unobserve(entry.target); } });
     }, { threshold: .08 });
     nodes.filter(el => !visibleNow(el)).forEach(el => observer.observe(el));
-    return () => { observer.disconnect(); document.documentElement.classList.remove("reveal-ready"); };
+    return () => { observer.disconnect(); timers.forEach(window.clearTimeout); document.documentElement.classList.remove("reveal-ready"); };
   }, []);
 
   return <>
     <SiteHeader />
 
-    <main>
+    <main id="conteudo" tabIndex={-1}>
       <section className="hero dark-section" id="topo">
-        <img className="hero-image" src={site.office} alt="Consultório de Jéssica Priscila Lago em Brasília, com poltronas e ampla janela" fetchPriority="high" />
+        <img className="hero-image" {...site.office} sizes="100vw" alt="Consultório de Jéssica Priscila Lago em Brasília, com poltronas e ampla janela" fetchPriority="high" decoding="async" />
         <div className="container hero-inner">
           <div className="hero-copy">
             <span className="hero-kicker">Psicóloga e psicanalista em Brasília · Online</span>
@@ -76,11 +99,11 @@ function Home() {
 
       <section className="section" id="para-quem"><div className="container two-col">
         <div className="sticky-intro reveal"><span className="section-label">Para quem é</span><h2 className="section-title">Às vezes, é preciso <em>parar e escutar.</em></h2><p className="text-copy">Atendo adolescentes e adultos em questões que atravessam afetos, relações e momentos de mudança. O trabalho começa pelo que você traz.</p></div>
-        <div className="concern-list">{site.concerns.map((item, index) => <div className="concern reveal" key={item.title} style={{ transitionDelay: `${index * 110}ms` }}><span className="concern-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{item.title}</h3><p>{item.text}</p></div></div>)}</div>
+        <div className="concern-list" data-scroller="Motivos de procura">{site.concerns.map((item, index) => <div className="concern reveal" key={item.title} style={{ transitionDelay: `${index * 110}ms` }}><span className="concern-number">{String(index + 1).padStart(2, "0")}</span><div><h3>{item.title}</h3><p>{item.text}</p></div></div>)}</div>
       </div></section>
 
       <section className="section about" id="sobre"><div className="container two-col about-grid">
-        <div className="portrait-wrap reveal"><img className="portrait" loading="lazy" src={site.portrait} alt="Retrato de Jéssica Priscila Lago"/><div className="portrait-caption"><strong>{site.name}</strong><span>{site.profession}</span></div></div>
+        <div className="portrait-wrap reveal"><img className="portrait" loading="lazy" decoding="async" {...site.portrait} sizes="(max-width: 800px) 86vw, 480px" alt="Retrato de Jéssica Priscila Lago"/><div className="portrait-caption"><strong>{site.name}</strong><span>{site.profession}</span></div></div>
         <div className="about-content reveal"><span className="section-label">Sobre</span><h2 className="section-title">Sou <em>Jéssica.</em></h2>
           <p>Sou psicóloga e psicanalista. Atendo em consultório particular em Brasília e também online.</p>
           <p>Minha formação em psicanálise é contínua: supervisão, grupos de estudo e escuta clínica fazem parte do meu trabalho.</p>
@@ -94,12 +117,12 @@ function Home() {
 
       <section className="section serenitah" id="serenitah"><div className="container serenitah-inner reveal">
         <div className="serenitah-text"><span className="section-label">Consultório</span><h2 className="section-title">Um espaço compartilhado com <em>outras profissionais.</em></h2><p className="text-copy">Atendo e administro a {site.clinic.name}, clínica que reúne outras profissionais da saúde mental e do cuidado em um mesmo espaço, com atendimento presencial e online.</p></div>
-        <figure className="serenitah-photo"><img loading="lazy" src={site.clinic.photo} alt="Profissionais da Serenitah sentadas na sala de atendimento, com um mapa-múndi na parede ao fundo"/><figcaption><strong>Equipe {site.clinic.name}</strong><span>Brasília, DF</span></figcaption></figure>
+        <figure className="serenitah-photo"><img loading="lazy" decoding="async" {...site.clinic.photo} sizes="(max-width: 800px) 100vw, 600px" alt="Profissionais da Serenitah sentadas na sala de atendimento, com um mapa-múndi na parede ao fundo"/><figcaption><strong>Equipe {site.clinic.name}</strong><span>Brasília, DF</span></figcaption></figure>
         <div className="serenitah-side"><a className="serenitah-card" href={site.clinic.url} {...external}><span className="serenitah-mark">{site.clinic.name}</span><span className="serenitah-sub">{site.clinic.fullName}</span><span className="serenitah-link">{site.clinic.label} <ExternalLink size={14} strokeWidth={1.5}/></span></a><a className="serenitah-map" href={site.clinic.mapUrl} title={site.clinic.address} {...external}><MapPin size={15} strokeWidth={1.5}/>Ver no mapa <ExternalLink size={12} strokeWidth={1.5}/></a></div>
       </div></section>
 
       <section className="section work" id="como-trabalho"><div className="container">
-        <div className="two-col work-top"><div className="reveal"><span className="section-label">Como trabalho</span><h2 className="section-title">Uma escuta que dá lugar à <em>sua palavra.</em></h2><p className="work-lead">Na psicanálise, o que você vive não é reduzido a uma resposta pronta. É pela conversa que diferentes sentidos podem aparecer.</p><div className="work-callout">O acompanhamento respeita o ritmo e a autonomia de quem procura atendimento.</div></div><div className="reveal"><img className="work-image" loading="lazy" src={site.office} alt="Sala de atendimento com poltronas no consultório em Brasília"/><div className="image-note">Consultório — Brasília, DF</div></div></div>
+        <div className="two-col work-top"><div className="reveal"><span className="section-label">Como trabalho</span><h2 className="section-title">Uma escuta que dá lugar à <em>sua palavra.</em></h2><p className="work-lead">Na psicanálise, o que você vive não é reduzido a uma resposta pronta. É pela conversa que diferentes sentidos podem aparecer.</p><div className="work-callout">O acompanhamento respeita o ritmo e a autonomia de quem procura atendimento.</div></div><div className="reveal"><img className="work-image" loading="lazy" decoding="async" {...site.office} sizes="(max-width: 800px) 100vw, 560px" alt="Sala de atendimento com poltronas no consultório em Brasília"/><div className="image-note">Consultório — Brasília, DF</div></div></div>
         <div className="pillars">{[
           ["i.", "Escuta singular", "Cada atendimento parte do que a pessoa traz, sem roteiro único."],
           ["ii.", "Tempo e continuidade", "As sessões duram em média 50 minutos. A frequência é conversada na primeira consulta."],
@@ -119,21 +142,10 @@ function Home() {
 
       <section className="section reviews" id="depoimentos"><div className="container">
         <div className="reviews-head reveal"><div><span className="section-label">Depoimentos</span><h2 className="section-title">O que dizem os <em>pacientes.</em></h2></div><div className="rating-inline"><strong className="rating-big">{site.rating}</strong><div className="rating-text"><p className="rating-note">de 5 · {site.reviewCount} avaliações no Doctoralia</p><a className="inline-link" href={site.reviewUrl} {...external}>Ver o perfil no Doctoralia <ArrowRight size={16}/></a></div></div></div>
-        <div className="reviews-masonry">{site.reviews.map((review, index) => <article className={`review reveal review-${index + 1}`} style={{ transitionDelay: `${index * 110}ms` }} key={review.author}><div className="review-mark">“</div><blockquote>{review.quote}</blockquote><footer>{review.author} · avaliação verificada no Doctoralia</footer></article>)}</div>
+        <div className="reviews-masonry" data-scroller="Depoimentos de pacientes">{site.reviews.map((review, index) => <article className={`review reveal review-${index + 1}`} style={{ transitionDelay: `${index * 110}ms` }} key={review.author}><div className="review-mark">“</div><blockquote>{review.quote}</blockquote><footer>{review.author} · avaliação verificada no Doctoralia</footer></article>)}</div>
       </div></section>
 
-      <section className="section" id="duvidas"><div className="container two-col faq-grid"><div className="sticky-intro reveal"><span className="section-label">Dúvidas</span><h2 className="section-title">Perguntas <em>frequentes.</em></h2><a href={site.profileUrl} {...external} className="btn btn-outline">Perguntar pelo Doctoralia <ArrowRight size={16}/></a></div><div className="faq-list">{[
-        ["Como é a primeira consulta?", "É um momento para conversar sobre o que motivou sua procura e combinar como será o acompanhamento."],
-        ["Você atende online?", "Sim. O atendimento online acontece pelo Google Meet, por meio de um link privativo fixo."],
-        ["Você atende brasileiros que moram fora do país?", "Sim. Atendo brasileiros que vivem no exterior em sessões online, pelo Google Meet. O horário é combinado levando em conta a diferença de fuso."],
-        ["Quanto tempo dura cada sessão?", "Cada sessão dura, em média, 50 minutos. Esse tempo pode variar conforme a pessoa ou a sessão."],
-        ["Qual é a frequência das sessões?", "A recomendação é de uma a duas vezes por semana. Dependendo do caso, sessões quinzenais podem ser combinadas após o início."],
-        ["O atendimento é sigiloso?", "O atendimento psicológico segue os deveres éticos de sigilo profissional. Em serviços de psicologia jurídica, as condições são esclarecidas conforme a demanda."],
-        ["Você atende por convênio?", "O atendimento é particular, com emissão de nota fiscal. A nota pode ser usada para solicitar reembolso se o convênio oferecer essa possibilidade."],
-        ["Quanto tempo dura o processo?", "Não há um prazo único para o acompanhamento. A decisão de continuar ou encerrar é conversada ao longo do processo."],
-        ["Como funciona a psicologia jurídica?", "O perfil oferece perícia ou assistência técnica, laudo pericial e formulação de quesitos para prova pericial psicológica. Consulte disponibilidade e valores para a sua demanda."],
-        ["Como posso começar?", "Você pode verificar os horários e agendar uma consulta pelo meu perfil no Doctoralia."],
-      ].map(([question, answer], index) => <details className="faq-item reveal" style={{ transitionDelay: `${Math.min(index, 4) * 110}ms` }} key={question} open={index === 0 ? true : undefined}><summary>{question}<span className="faq-plus" aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></div></section>
+      <section className="section" id="duvidas"><div className="container two-col faq-grid"><div className="sticky-intro reveal"><span className="section-label">Dúvidas</span><h2 className="section-title">Perguntas <em>frequentes.</em></h2><a href={site.profileUrl} {...external} className="btn btn-outline">Perguntar pelo Doctoralia <ArrowRight size={16}/></a></div><div className="faq-list">{site.faq.map(({ question, answer }, index) => <details className="faq-item reveal" style={{ transitionDelay: `${Math.min(index, 4) * 110}ms` }} key={question} open={index === 0 ? true : undefined}><summary>{question}<span className="faq-plus" aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div></div></section>
 
       <section className="section contact dark-section" id="contato"><div className="container contact-grid"><div className="reveal"><span className="section-label">Contato</span><h2 className="section-title">Comece por uma <em>conversa.</em></h2><p>Se quiser iniciar um atendimento ou consultar um serviço em psicologia jurídica, veja os horários disponíveis no meu perfil.</p><Booking light /><div className="contact-social"><a href={site.instagramUrl} {...external}><InstagramIcon/>{site.instagramHandle}</a><a href={site.linkedinUrl} {...external}><LinkedinIcon/>LinkedIn</a></div></div><div className="reveal contact-side"><div className="contact-map-wrap"><iframe title="Mapa do consultório de Jéssica Priscila Lago em Brasília" className="contact-map" src="https://maps.google.com/maps?q=-15.7898359,-47.8852539&z=16&hl=pt-BR&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen></iframe><div className="contact-map-note"><MapPin size={16} strokeWidth={1.5}/><span>SHN, Edifício Fusion Work e Live — Brasília, DF</span><a className="contact-map-link" href={site.mapUrl} {...external}>Abrir no Google Maps <ExternalLink size={12} className="inline" /></a></div></div><a className="contact-address" href={site.mapUrl} {...external}>{site.address} ↗</a><div className="contact-online">Atendimento online disponível, inclusive para brasileiros no exterior</div></div></div></section>
     </main>

@@ -1,0 +1,16 @@
+{
+  "name": "Jéssica Priscila Lago · Psicóloga e Psicanalista",
+  "short_name": "Jéssica Lago",
+  "description": "Psicóloga e psicanalista em Brasília e online.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "browser",
+  "background_color": "#f3f2e9",
+  "theme_color": "#f3f2e9",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
