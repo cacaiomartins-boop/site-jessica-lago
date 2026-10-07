@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://jessicalagopsi.com/sitemap.xml
+Sitemap: https://www.jessicalagopsi.com/sitemap.xml

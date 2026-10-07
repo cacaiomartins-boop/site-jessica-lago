@@ -23,7 +23,7 @@ function photo(name: string, widths: readonly [number, number, number], width: n
 
 export const site = {
   // Endereço oficial do site (sem barra no final). Usado em canonical, sitemap, compartilhamento e dados estruturados.
-  url: "https://jessicalagopsi.com",
+  url: "https://www.jessicalagopsi.com",
   // Imagem de pré-visualização ao compartilhar o link (WhatsApp, redes sociais, Google).
   ogImage: "/img/og-image.jpg",
   name: "Jéssica Priscila Lago",
@@ -43,11 +43,11 @@ export const site = {
   reviewCount: 7,
   portrait: photo("jessica-lago-retrato", [640, 960, 1280], 1280, 1919),
   office: photo("consultorio-jessica-lago", [640, 960, 1280], 1280, 853),
-  // Consultório compartilhado com outras profissionais. Troque o "url" pelo site real da Serenitah quando estiver pronto.
+  // Consultório compartilhado com outras profissionais. O "url" é o site da Serenitah.
   clinic: {
     name: "Serenitah",
     fullName: "Serenitah Terapias Integradas",
-    url: "https://serenitah.example",
+    url: "https://www.serenitah.com",
     label: "Conhecer o site da Serenitah",
     photo: photo("serenitah-equipe", [640, 960, 1440], 1440, 960),
     address: "Asa Norte, Brasília - DF, 70701-040, Brasil",
