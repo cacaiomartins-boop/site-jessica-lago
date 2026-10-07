@@ -1,16 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowRight, BadgeCheck, CalendarDays, Clock3, ExternalLink, MapPin, Menu, Monitor, ShieldCheck, X } from "lucide-react";
+import { useEffect } from "react";
+import { ArrowRight, BadgeCheck, Clock3, ExternalLink, MapPin, Monitor, ShieldCheck } from "lucide-react";
 import { site } from "../config/site";
+import { FloatingContact, SiteFooter, SiteHeader } from "../components/site-chrome";
 
-const links = [
-  { label: "Sobre", href: "#sobre" },
-  { label: "Como trabalho", href: "#como-trabalho" },
-  { label: "Atendimento", href: "#atendimento" },
-  { label: "Como funciona", href: "#como-funciona" },
-  { label: "Depoimentos", href: "#depoimentos" },
-  { label: "Dúvidas", href: "#duvidas" },
-];
 const external = { target: "_blank", rel: "noopener noreferrer" } as const;
 
 export const Route = createFileRoute("/")({
@@ -39,16 +32,6 @@ function Booking({ light = false, label = site.bookingLabel, className = "" }: {
 }
 
 function Home() {
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   useEffect(() => {
     const nodes = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -63,15 +46,7 @@ function Home() {
   }, []);
 
   return <>
-    <header className={`site-header ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}>
-      <div className="container header-inner">
-        <a className="brand" href="#topo" onClick={() => setMenuOpen(false)} aria-label="Jéssica Priscila Lago, voltar ao início"><span className="brand-name">{site.name}</span><span className="brand-detail">{site.profession} · {site.registration}</span></a>
-        <nav className="desktop-nav" aria-label="Navegação principal">{links.map(link => <a key={link.href} href={link.href}>{link.label}</a>)}</nav>
-        <a href={site.profileUrl} {...external} className="btn header-cta">Agendar consulta <ArrowRight size={15} strokeWidth={1.5}/></a>
-        <button className="menu-toggle" aria-label={menuOpen ? "Fechar menu" : "Abrir menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={24} strokeWidth={1.5}/> : <Menu size={24} strokeWidth={1.5}/>}</button>
-      </div>
-      <nav className="mobile-nav" aria-label="Navegação para celular">{links.map(link => <a key={link.href} href={link.href} onClick={() => setMenuOpen(false)}>{link.label}</a>)}<a className="btn btn-dark" href={site.profileUrl} {...external} onClick={() => setMenuOpen(false)}>Agendar consulta <ArrowRight size={16}/></a></nav>
-    </header>
+    <SiteHeader />
 
     <main>
       <section className="hero dark-section" id="topo">
@@ -163,18 +138,7 @@ function Home() {
       <section className="section contact dark-section" id="contato"><div className="container contact-grid"><div className="reveal"><span className="section-label">Contato</span><h2 className="section-title">Comece por uma <em>conversa.</em></h2><p>Se quiser iniciar um atendimento ou consultar um serviço em psicologia jurídica, veja os horários disponíveis no meu perfil.</p><Booking light /><div className="contact-social"><a href={site.instagramUrl} {...external}><InstagramIcon/>{site.instagramHandle}</a><a href={site.linkedinUrl} {...external}><LinkedinIcon/>LinkedIn</a></div></div><div className="reveal contact-side"><div className="contact-map-wrap"><iframe title="Mapa do consultório de Jéssica Priscila Lago em Brasília" className="contact-map" src="https://maps.google.com/maps?q=-15.7898359,-47.8852539&z=16&hl=pt-BR&output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen></iframe><div className="contact-map-note"><MapPin size={16} strokeWidth={1.5}/><span>SHN, Edifício Fusion Work e Live — Brasília, DF</span><a className="contact-map-link" href={site.mapUrl} {...external}>Abrir no Google Maps <ExternalLink size={12} className="inline" /></a></div></div><a className="contact-address" href={site.mapUrl} {...external}>{site.address} ↗</a><div className="contact-online">Atendimento online disponível, inclusive para brasileiros no exterior</div></div></div></section>
     </main>
 
-    <footer className="footer"><div className="container">
-      <div className="footer-top">
-        <div className="footer-brand"><h3>{site.name}</h3><p>{site.profession} · {site.registration}</p><p>SHN, Quadra 1, Bloco D, Sala 1107 · Ed. Fusion Work e Live<br/>Brasília — DF · Online para o Brasil e exterior</p><div className="footer-links"><a href={site.mapUrl} {...external}>Mapa ↗</a><a href={site.clinic.url} {...external}>{site.clinic.name} ↗</a><a href={site.profileUrl} {...external}>Doctoralia ↗</a><a href={site.instagramUrl} {...external}>Instagram ↗</a><a href={site.linkedinUrl} {...external}>LinkedIn ↗</a></div></div>
-        <div className="footer-urgent"><h4>É urgente? Ligue para:</h4><div className="footer-urgent-grid">{[
-          ["193", "Bombeiros", "Resgate, acidentes, incêndios e risco de suicídio."],
-          ["190", "Polícia", "Violência, agressão ou ameaça."],
-          ["192", "SAMU", "Urgências e emergências de saúde."],
-          ["188", "CVV", "Apoio emocional, 24h e gratuito."],
-        ].map(([number, name, text]) => <a className="footer-urgent-item" href={`tel:${number}`} key={number}><strong>{number}</strong><span>{name}</span><p>{text}</p></a>)}</div></div>
-      </div>
-      <div className="footer-bottom"><p>© {new Date().getFullYear()} · {site.name} · {site.registration} · <em>Escuta em seu tempo.</em></p></div>
-    </div></footer>
-    <a href={site.profileUrl} {...external} className={`floating-contact ${scrolled ? "visible" : ""}`} aria-label="Agendar consulta no Doctoralia" title="Agendar consulta no Doctoralia"><CalendarDays size={24} strokeWidth={1.5}/></a>
+    <SiteFooter />
+    <FloatingContact />
   </>;
 }

@@ -1,4 +1,16 @@
 
+// Cada publicação da página /publicacoes. Para adicionar um texto, inclua um item em "publications" (abaixo).
+// "paragraphs" (opcional) mostra o texto completo dentro do site; "url" (opcional) leva ao texto original.
+export type Publication = {
+  title: string;
+  type?: string;
+  date?: string;
+  summary: string;
+  paragraphs?: string[];
+  url?: string;
+  linkLabel?: string;
+};
+
 export const site = {
   name: "Jéssica Priscila Lago",
   firstName: "Jéssica",
@@ -30,6 +42,7 @@ export const site = {
   instagramUrl: "https://www.instagram.com/psi.jessicalago",
   instagramHandle: "@psi.jessicalago",
   linkedinUrl: "https://www.linkedin.com/in/j%C3%A9ssica-priscila-lago-29211778",
+  publications: [] as Publication[],
   education: [
     "Bacharel em Psicologia pelo Centro Universitário de Brasília (UniCEUB)",
     "Pós-graduada em Teoria Psicanalítica pelo UniCEUB",
